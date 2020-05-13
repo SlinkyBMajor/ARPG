@@ -6,9 +6,10 @@ namespace ARPG
 {
     public class AnimatorHandler : MonoBehaviour
     {
+        public PlayerManager playerManager;
         public Animator anim;
-        public InputHandler inputHandler;
-        public PlayerLocomotion playerLocomotion;
+        InputHandler inputHandler;
+        PlayerLocomotion playerLocomotion;
         int vertical;
         int horizontal;
         public bool canRotate;
@@ -18,15 +19,16 @@ namespace ARPG
             anim = GetComponent<Animator>();
             inputHandler = GetComponentInParent<InputHandler>();
             playerLocomotion = GetComponentInParent<PlayerLocomotion>();
+            playerManager = GetComponentInParent<PlayerManager>();
             vertical = Animator.StringToHash("Vertical");
             horizontal = Animator.StringToHash("Horizontal");
         }
 
-        public void UpdateAnimatorValues(float verticalMovement, float horizontalMovement, bool isSprinting)
+        public void UpdateAnimatorValues(float verticalMovement, float horizontalMovement) //Removed isSprinting as input
         {
 
             float v = 0;
-            if (isSprinting)
+            if (playerManager.isSprinting)
             {
                 v = 2;
             }
@@ -107,7 +109,7 @@ namespace ARPG
         // Syncs characters position with animation root movement
         private void OnAnimatorMove()
         {
-            if (!inputHandler.isInteracting)
+            if (!playerManager.isInteracting)
                 return;
 
             float delta = Time.deltaTime;

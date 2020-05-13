@@ -18,29 +18,11 @@ namespace ARPG
         public bool rollFlag;
         public bool sprintFlag;
         public float rollInputTimer; // The time the roll button has been held
-        public bool isInteracting;
 
         PlayerControls inputActions;
-        CameraHandler cameraHandler;
 
         Vector2 movementInput;
         Vector2 cameraInput;
-
-
-        public void Awake()
-        {
-            cameraHandler = CameraHandler.singleton;
-        }
-
-        private void FixedUpdate()
-        {
-            float delta = Time.fixedDeltaTime;
-            if(cameraHandler != null)
-            {
-                cameraHandler.FollowTarget(delta);
-                cameraHandler.HandleCameraRotation(delta, mouseX, mouseY);
-            }
-        }
 
         public void OnEnable()
         {
@@ -80,11 +62,14 @@ namespace ARPG
             if(b_Input)
             {
                 rollInputTimer += delta;
+                if(moveAmount > 0)
+                {
                 sprintFlag = true;
+                }
             }
             else
             {
-                if(rollInputTimer > 0 && rollInputTimer < 0.5f)
+                if(rollInputTimer > 0 && rollInputTimer < 0.5f) // If NOT roll being held, but the button has been pressed for between 0-0.5f, roll
                 {
                     sprintFlag = false;
                     rollFlag = true;
